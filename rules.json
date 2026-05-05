@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Front Camera Calibration",
+    "category": "Camera",
+    "matchKeywords": ["front camera", "windshield camera", "lane camera"],
+    "excludes": []
+  },
+  {
+    "name": "Front Radar Calibration",
+    "category": "Radar",
+    "matchKeywords": ["front radar", "acc radar", "adaptive cruise"],
+    "excludes": []
+  },
+  {
+    "name": "Windshield Calibration",
+    "category": "Windshield",
+    "matchKeywords": ["windshield", "front glass"],
+    "excludes": []
+  },
+  {
+    "name": "Bumper Sensor Calibration",
+    "category": "Bumper",
+    "matchKeywords": ["front bumper", "rear bumper"],
+    "excludes": ["Windshield Calibration"]
+  }
+]
