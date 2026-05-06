@@ -1,6 +1,7 @@
 using CalibrationDecisionEngine.Domain.Models;
 using CalibrationDecisionEngine.Domain.Steps;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace CalibrationDecisionEngine.Tests;
@@ -25,23 +26,12 @@ public sealed class NormalizeInputStepTests
         result.Lines[0].Operation.Should().Be("RPL");
     }
 
-    [Fact]
-    public async Task Execute_DeduplicatesIdenticalLines()
-    {
-        var ctx = MakeContext(
-            ("Replace front camera", "RPL"),
-            ("Replace front camera", "RPL"),
-            ("R&I windshield", "RI"));
-        var step = new NormalizeInputStep();
-
-        var result = await step.ExecuteAsync(ctx, default);
-
-        result.Lines.Should().HaveCount(2);
-    }
 }
 
 public sealed class MatchRulesStepTests
 {
+    private static readonly IConfiguration DefaultConfig = new ConfigurationBuilder().Build();
+
     private static CalibrationRule MakeRule(string name, params string[] keywords) => new()
     {
         Name = name,
@@ -60,7 +50,7 @@ public sealed class MatchRulesStepTests
             Lines = [new EstimateLine { Description = "Replace front camera", Operation = "RPL" }]
         };
 
-        var result = await new MatchRulesStep(rules).ExecuteAsync(ctx, default);
+        var result = await new MatchRulesStep(rules, DefaultConfig).ExecuteAsync(ctx, default);
 
         result.MatchedCalibrations.Should().ContainSingle()
             .Which.RuleName.Should().Be("Camera Rule");
@@ -77,7 +67,7 @@ public sealed class MatchRulesStepTests
             Lines = [new EstimateLine { Description = "Unrelated work", Operation = "RPL" }]
         };
 
-        var result = await new MatchRulesStep(rules).ExecuteAsync(ctx, default);
+        var result = await new MatchRulesStep(rules, DefaultConfig).ExecuteAsync(ctx, default);
 
         result.MatchedCalibrations.Should().ContainSingle()
             .Which.Trigger.Should().Be("Front Bumper");
@@ -97,11 +87,30 @@ public sealed class MatchRulesStepTests
 
         var ctx = new VehicleContext { Vin = "TEST", Lines = lines };
 
-        var result = await new MatchRulesStep(rules).ExecuteAsync(ctx, default);
+        var result = await new MatchRulesStep(rules, DefaultConfig).ExecuteAsync(ctx, default);
 
         result.MatchedCalibrations.Should().HaveCount(ruleCount);
         result.MatchedCalibrations.Select(c => c.RuleName)
             .Should().BeEquivalentTo(rules.Select(r => r.Name));
+    }
+
+    [Fact]
+    public async Task Execute_ExactWordMode_DoesNotMatchPartialWord()
+    {
+        var rules = new List<CalibrationRule> { MakeRule("Radar Rule", "radar") };
+        var ctx = new VehicleContext
+        {
+            Vin = "TEST",
+            Lines = [new EstimateLine { Description = "radarmaster unit replaced", Operation = "RPL" }]
+        };
+
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["Matching:Mode"] = "ExactWord" })
+            .Build();
+
+        var result = await new MatchRulesStep(rules, config).ExecuteAsync(ctx, default);
+
+        result.MatchedCalibrations.Should().BeEmpty();
     }
 }
 

@@ -61,9 +61,20 @@ Para não criar dependência do projeto Domain em coisas do ASP.NET Core. Quem s
 - `FluentAssertions`: deixa os erros de teste mais legíveis
 - `Microsoft.AspNetCore.Mvc.Testing`: permite rodar testes E2E sem subir um servidor de verdade
 
-## O que ficou de fora
+## Bônus implementado
 
-Não implementei nenhum dos bônus por falta de tempo. O B3 (logs estruturados por step) seria o mais fácil de encaixar porque o pipeline já usa `ILoggerFactory`.
+**B2. Feature flag no matching**: adicionei um toggle no `appsettings.json` que troca a lógica de busca do `MatchRulesStep` entre dois modos sem precisar redeployar:
+
+- `"Substring"` (padrão): a keyword pode aparecer em qualquer parte da descrição
+- `"ExactWord"`: a keyword precisa aparecer como palavra completa
+
+Para trocar basta alterar o `appsettings.json`:
+
+```json
+"Matching": {
+  "Mode": "ExactWord"
+}
+```
 
 ## O que faria diferente
 
