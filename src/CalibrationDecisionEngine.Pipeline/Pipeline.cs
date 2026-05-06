@@ -49,8 +49,6 @@ internal sealed class Pipeline<TIn, TOut> : IPipeline<TIn, TOut>
 
             sw.Stop();
 
-            // Pull notes off the context (if any) so the runner can attach them to the trace
-            // without coupling steps to a logging API.
             string? notes = null;
             if (current is IPipelineContext ctx)
             {

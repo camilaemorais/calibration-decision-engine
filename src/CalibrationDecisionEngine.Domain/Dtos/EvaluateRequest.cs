@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using CalibrationDecisionEngine.Domain.Models;
 
 namespace CalibrationDecisionEngine.Domain.Dtos;
 

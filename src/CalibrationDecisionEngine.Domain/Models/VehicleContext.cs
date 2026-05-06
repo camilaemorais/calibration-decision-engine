@@ -13,6 +13,8 @@ public sealed class VehicleContext : IPipelineContext
 
     public ConcurrentBag<MatchedCalibration> MatchedCalibrations { get; } = [];
 
+    public List<MatchedCalibration> FinalCalibrations { get; set; } = [];
+
     public EvaluateResponse? Report { get; set; }
 
     public string? StepNotes { get; set; }

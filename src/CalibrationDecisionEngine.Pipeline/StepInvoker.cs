@@ -1,10 +1,5 @@
 namespace CalibrationDecisionEngine.Pipeline;
 
-// The Pipeline stores steps with potentially different TIn/TOut pairs (heterogeneous chain).
-// We can't put IPipelineStep<,> directly in a single typed list, so we wrap each one in a
-// non-generic invoker that boxes the input to object and unboxes inside.
-//
-// This is the only piece of "untyped" code in the framework — public APIs stay strongly typed.
 internal abstract class StepInvoker
 {
     public abstract string Name { get; }

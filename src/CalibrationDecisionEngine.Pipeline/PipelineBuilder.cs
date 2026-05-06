@@ -2,13 +2,6 @@ using Microsoft.Extensions.Logging;
 
 namespace CalibrationDecisionEngine.Pipeline;
 
-/// <summary>
-/// Fluent builder for assembling a heterogeneous chain of steps.
-/// <para>
-/// Each <see cref="AddStep{TNext}"/> call returns a builder whose output type matches the
-/// new step's output, so the compiler enforces step compatibility at composition time.
-/// </para>
-/// </summary>
 public sealed class PipelineBuilder<TIn, TOut>
 {
     private readonly List<StepInvoker> _steps;

@@ -1,0 +1,14 @@
+##teste rápido para avaliar o endpoint
+POST http://localhost:5000/vehicle/evaluate
+Content-Type: application/json
+
+{
+    "vin": "1HGCM82633A123456",
+    "headers": ["Front Bumper", "Windshield", "Front Radar"],
+    "lines": [
+      { "description": "Replace front camera", "operation": "RPL" },
+      { "description": "Calibrate front radar",  "operation": "CAL" },
+      { "description": "R&I windshield",         "operation": "RI"  },
+      { "description": "Replace front bumper",   "operation": "RPL" }
+    ]
+  }

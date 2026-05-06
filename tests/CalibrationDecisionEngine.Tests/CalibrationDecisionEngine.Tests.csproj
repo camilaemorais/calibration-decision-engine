@@ -30,4 +30,11 @@
     <ProjectReference Include="..\..\src\CalibrationDecisionEngine.Api\CalibrationDecisionEngine.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\rules.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>rules.json</Link>
+    </None>
+  </ItemGroup>
+
 </Project>
